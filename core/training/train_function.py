@@ -80,7 +80,7 @@ def train_step(rho_init, rho_target, max_steps, N_cavity,
     if not complex_fields:
         ctrl_num_unitary = (1 + N_snap) * substeps
     else:
-        ctrl_num_unitary = (2+N_snap)*substeps
+        ctrl_num_unitary = (2 + N_snap) * substeps
 
     if not feedback or measure_op == "non-demolition":
         ctrl_num = ctrl_num_unitary
@@ -113,12 +113,12 @@ def train_step(rho_init, rho_target, max_steps, N_cavity,
     # Convert them to Tensorflow
     id_sigma_p = tf.constant(np.kron(np.eye(N_cavity), sigma_p), dtype='complex128')
     id_sigma_m = tf.constant(np.kron(np.eye(N_cavity), sigma_m), dtype='complex128')
-    if system=="JC":
+    if system == "JC":
         sx = id_sigma_p + id_sigma_m
     a_sigma_p = tf.constant(np.kron(a, sigma_p), dtype='complex128')
     a_dag_sigma_m = tf.constant(np.kron(a_dag, sigma_m), dtype='complex128')
     H_cav_qb = a_sigma_p + a_dag_sigma_m
-    if type_unitary=="SNAP":
+    if type_unitary == "SNAP":
         a_dag = tf.constant(a_dag, dtype='complex128')
         a = tf.constant(a, dtype='complex128')
         a_dag_a = tf.matmul(a_dag, a)
@@ -127,10 +127,7 @@ def train_step(rho_init, rho_target, max_steps, N_cavity,
         a_dag = tf.constant(np.kron(a_dag, np.eye(2)), dtype='complex128')
         a_dag_a = tf.constant(np.kron(a_dag_a, np.eye(2)), dtype='complex128')
 
-
-
     discount_factor = tf.constant(discount_factor, dtype="float64")
-
 
     with tf.GradientTape(persistent=True) as tape:
         if parameters is not None:
@@ -208,7 +205,7 @@ def train_step(rho_init, rho_target, max_steps, N_cavity,
                     if mode == "lookup":
                         rescaled = tf.cast((measure + 1) / 2, dtype="float64")
                         if feedback:
-                            power =tf.round( 2 ** tf.cast(index, dtype="float64"))
+                            power = tf.round(2 ** tf.cast(index, dtype="float64"))
 
                             appo = tf.cast(tf.round(rescaled[:, 0] * power), dtype="int32")
                             comb = tf.cast(comb + appo, dtype=tf.int32)
@@ -231,14 +228,16 @@ def train_step(rho_init, rho_target, max_steps, N_cavity,
                 if goal == "fidelity" or goal == "both":
                     if system == "JC":
                         if type_unitary == "qubit-cavity":
-                            rho = qubit_cavity_control(rho, ctrl, complex_fields, subindex, substeps, H_cav_qb, id_sigma_m,
-                                                 id_sigma_p, sx, a_sigma_p,
-                                                 a_dag_sigma_m)
+                            rho = qubit_cavity_control(rho, ctrl, complex_fields, subindex, substeps, H_cav_qb,
+                                                       id_sigma_m,
+                                                       id_sigma_p, sx, a_sigma_p,
+                                                       a_dag_sigma_m)
 
-                        elif type_unitary=="SNAP":
-                            rho = snap_evolution(rho, ctrl, complex_fields, subindex, N_snap, shift, a, a_dag, batch_size, N_cavity)
-                    elif system=="qubits":
-                        tot_ctrl = tf.cast(ctrl[:, 0:2], dtype="complex128")* tf.cast(1 + shift, dtype="complex128")
+                        elif type_unitary == "SNAP":
+                            rho = snap_evolution(rho, ctrl, complex_fields, subindex, N_snap, shift, a, a_dag,
+                                                 batch_size, N_cavity)
+                    elif system == "qubits":
+                        tot_ctrl = tf.cast(ctrl[:, 0:2], dtype="complex128") * tf.cast(1 + shift, dtype="complex128")
                         U2 = tf.einsum('i,jk->ijk', tf.math.cos(tot_ctrl[:, 0] / 2), tf.eye(2, dtype='complex128'))
                         U2 += 1j * tf.einsum('i,jk->ijk', tf.math.sin(tot_ctrl[:, 0] / 2) * tf.math.sin(tot_ctrl[:, 1]),
                                              sx)

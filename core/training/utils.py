@@ -92,6 +92,7 @@ def measure_system(F_meas, rho, goal, generator, measure_op="sy", theta=None, fa
     log_probs = tf.math.log(tf.abs(prob))
     return rho, measure, log_probs
 
+
 @tf.function
 def compute_fidelity(rho, rho_target):
     """
@@ -109,7 +110,7 @@ def compute_fidelity(rho, rho_target):
     fidelity: tf.Tensor
         The fidelity of the input density matrix.
     """
-    if rho.shape[1:]!=rho_target.shape:
+    if rho.shape[1:] != rho_target.shape:
         N_cavity = int(rho.shape[1] / 2)
         _rho = tf.linalg.einsum("bikjk->bij", tf.reshape(rho, (rho.shape[0], N_cavity, 2, N_cavity, 2)))
     else:
@@ -117,4 +118,3 @@ def compute_fidelity(rho, rho_target):
     fidelity = tf.cast(tf.linalg.einsum("bii->b", tf.matmul(_rho, rho_target)), dtype="float64")
 
     return fidelity
-

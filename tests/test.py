@@ -1,9 +1,9 @@
-import pytest
 import sys
+
+import pytest
+
 sys.path.append('..')
 from main import main
-
-
 
 
 @pytest.mark.parametrize(
