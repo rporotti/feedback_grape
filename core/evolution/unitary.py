@@ -32,6 +32,7 @@ def qubit_cavity_control(rho, ctrl, complex_fields, subindex, substeps, H_cav_qb
     rho = tf.matmul(U3, tf.matmul(rho, U3, adjoint_b=True))
     return rho
 
+
 def snap_evolution(rho, ctrl, complex_fields, subindex, N_snap, shift, a, a_dag, batch_size, N_cavity):
     if complex_fields:
         tot_ctrl = tf.cast(ctrl[:, subindex * (2 + N_snap) + 0] \
