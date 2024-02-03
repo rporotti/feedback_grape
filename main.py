@@ -187,7 +187,7 @@ def main(
     # plt.plot(fids.mean(axis=0))
     # plt.show()
     if return_fidelity:
-        return fidelity.numpy()[-1]
+        return np.mean(fids[:, -1])
     else:
         return True
 
