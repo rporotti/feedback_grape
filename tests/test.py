@@ -64,7 +64,8 @@ def test_convergence(gradient_steps, substeps, gamma, feedback, control, goal, m
         input=input_type,
         n_average=n_average,
         kind_state_output=kind_state_output,
-        return_fidelity=True
+        return_fidelity=True,
+        batch_size=100
     ) > 0.95
 
 
